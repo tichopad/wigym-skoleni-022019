@@ -17,7 +17,9 @@ $user = get_user_from_database($email);
 if ($user) {
 
     // A pokud se zadane heslo shoduje
-    if ($user['password'] === $password) {
+    $verified = password_verify($password, $user['password']);
+
+    if ($verified) {
 
         // Nastavi do session prihlaseni
         $_SESSION['logged_in'] = true;

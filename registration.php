@@ -26,7 +26,8 @@ if ($userExists) {
 } else {
 
     // Pokud uzivatel s e-mailem neexistuje, ulozi se jeho ucet do databaze
-    save_to_database($email, $password);
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    save_to_database($email, $hash);
 
     // Do session se nastavi zprava
     $_SESSION['message'] = "Účet $email byl vytvořen";
