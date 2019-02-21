@@ -27,8 +27,9 @@ if ($user) {
 
             // Nahodny retezec (cas + nahodne cislo)
             $cookieId = time() . uniqid();
-            // Ulozi nahodny retezec k uzivateli
-            save_user_cookie_id($user['email'], $cookieId);
+            // Ulozi zahashovany nahodny retezec k uzivateli
+            $cookieHash = password_hash($cookieId, PASSWORD_DEFAULT);
+            save_user_cookie_id($user['email'], $cookieHash);
             // Do cookie pak ulozi text ve tvaru "email:nahodny retezec"
             $cookieValue = $user['email'] . ':' . $cookieId;
 
