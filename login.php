@@ -6,6 +6,7 @@ require('./database.php');
 // Email a heslo z formulare
 $email = $_POST['email'];
 $password = $_POST['password'];
+$remember = $_POST['remember'];
 
 // Nastartuje pristup k session
 session_start();
@@ -20,6 +21,21 @@ if ($user) {
     $verified = password_verify($password, $user['password']);
 
     if ($verified) {
+
+        // Pri zapamatovani prihlaseni nastavi cookie
+        if ($remember) {
+
+            // Nahodny retezec (cas + nahodne cislo)
+            $cookieId = time() . uniqid();
+            // Ulozi nahodny retezec k uzivateli
+            save_user_cookie_id($user['email'], $cookieId);
+            // Do cookie pak ulozi text ve tvaru "email:nahodny retezec"
+            $cookieValue = $user['email'] . ':' . $cookieId;
+
+            // Nastavi cookie
+            setcookie('UID', $cookieValue, time() + (3600 * 24 * 30), "/");
+
+        }
 
         // Nastavi do session prihlaseni
         $_SESSION['logged_in'] = true;

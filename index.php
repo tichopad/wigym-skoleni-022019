@@ -1,3 +1,4 @@
+<?php require('./cookie.php'); ?>
 
 <!DOCTYPE html>
     <head>
@@ -5,9 +6,6 @@
         <title>Registrace a přihlášení</title>
     </head>
     <body>
-
-        <!-- Nastartuje session -->
-        <?php session_start(); ?>
 
         <!-- Pokud existuje zprava v session, vypise ji -->
         <?php if($_SESSION['message']): ?>
@@ -67,6 +65,11 @@
 
                     <input type="password" name="password" placeholder="Heslo" required>
                     <br>
+
+                    <p>
+                        <input type="checkbox" name="remember" id="remember">
+                        <label for="remember">Zapamatovat přihlášení</label>
+                    </p>
 
                     <button type="submit" name="submit">Přihlásit</button>
 

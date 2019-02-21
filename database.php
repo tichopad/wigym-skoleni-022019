@@ -51,3 +51,18 @@ function check_if_user_exists($email) {
 
     return count($users) > 0;
 }
+
+// Najde uzivatele v databazi a ulozi k nemu hash cookieId retezce
+function save_user_cookie_id($email, $cookieId) {
+    $database = load_database_file();
+
+    foreach ($database as &$user) {
+        if ($user['email'] === $email) {
+            $user['cookie_id'] = password_hash($cookieId, PASSWORD_DEFAULT);
+        }
+    }
+
+    $path = get_database_file_path();
+
+    return file_put_contents($path, json_encode($database));
+}
