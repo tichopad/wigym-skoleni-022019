@@ -9,7 +9,7 @@ session_start();
 unset($_SESSION['logged_in']);
 unset($_SESSION['email']);
 
-// Smazani cookie
+// Smazani cookie nastavenim nasi cookie na "null" - prazdnou hodnotu
 setcookie('UID', null, time() + (3600 * 24 * 30), "/");
 
 // Prida do session zpravu o odhlaseni
