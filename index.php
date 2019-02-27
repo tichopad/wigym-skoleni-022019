@@ -1,3 +1,4 @@
+<?php require('./cookie.php'); ?>
 
 <!DOCTYPE html>
     <head>
@@ -6,42 +7,77 @@
     </head>
     <body>
 
-        <div>
+        <!-- Pokud existuje zprava v session, vypise ji -->
+        <?php if($_SESSION['message']): ?>
 
-            <h1>Registrace</h1>
+            <div>
+                <p><strong><?php echo $_SESSION['message']; ?></strong></p>
+            </div>
 
-            <form name="registration" action="" method="post">
+            <?php unset($_SESSION['message']); ?>
 
-                <input type="email" name="email" placeholder="E-mail" required>
-                <br>
+        <?php endif; ?>
 
-                <input type="password" name="password" placeholder="Heslo" required>
-                <br>
+        <!-- Pokud je uzivatel prihlaseny, uvidi jiny obsah -->
+        <?php if ($_SESSION['logged_in']): ?>
 
-                <button type="submit" name="submit">Registrovat</button>
+            <div>
 
-            </form>
+                <h1>Přihlášen jako <?php echo $_SESSION['email']; ?></h1>
 
-        </div>
+                <form name="logout" action="logout.php" method="post">
 
-        <div>
+                    <button type="submit" name="submit">Odhlásit</button>
 
-            <h1>Přihlášení</h1>
+                </form>
 
-            <form name="login" action="" method="post">
+            </div>
 
-                <input type="email" name="email" placeholder="E-mail" required>
-                <br>
+        <!-- Pokud neni, uvidi registraci a prihlaseni -->
+        <?php else: ?>
 
-                <input type="password" name="password" placeholder="Heslo" required>
-                <br>
+            <div>
 
-                <button type="submit" name="submit">Přihlásit</button>
+                <h1>Registrace</h1>
 
-            </form>
+                <form name="registration" action="registration.php" method="post">
 
-        </div>
+                    <input type="email" name="email" placeholder="E-mail" required>
+                    <br>
 
+                    <input type="password" name="password" placeholder="Heslo" required>
+                    <br>
+
+                    <button type="submit" name="submit">Registrovat</button>
+
+                </form>
+
+            </div>
+
+            <div>
+
+                <h1>Přihlášení</h1>
+
+                <form action="login.php" name="login" method="post">
+
+                    <input type="email" name="email" placeholder="E-mail" required>
+                    <br>
+
+                    <input type="password" name="password" placeholder="Heslo" required>
+                    <br>
+
+                    <p>
+                        <input type="checkbox" name="remember" id="remember">
+                        <label for="remember">Zapamatovat přihlášení</label>
+                    </p>
+
+                    <button type="submit" name="submit">Přihlásit</button>
+
+                </form>
+
+            </div>
+
+        <?php endif; ?>
 
     </body>
 </html>

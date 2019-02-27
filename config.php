@@ -1,8 +1,12 @@
 <?php
 
 return [
+    // Adresa databaze (vychozi je "localhost")
     'host' => 'localhost',
-    'user' => 'root',
-    'password' => 'reginald',
-    'database' => 'moravio_wigym_skoleni',
+    // Uzivatelske jmeno pro pristup do databaze (vychozi byva "root")
+    'user' => '',
+    // Heslo databaze (vychozi byva prazdne nebo "root")
+    'password' => '',
+    // Nazev databaze
+    'database' => '',
 ];

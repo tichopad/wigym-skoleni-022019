@@ -1,53 +1,52 @@
 <?php
 
-// Vrati cestu k datovemu souboru
-function get_database_file_path() {
-    return './database.json';
-}
+// Vraci pripojeni na databazi
+function db_connect() {
+    static $db;
 
-// Vrati dekodovany obsah datoveho souboru
-function load_database_file() {
-    $path = get_database_file_path();
-    $file = file_get_contents($path);
-
-    return json_decode($file, true);
-}
-
-// Ulozi uzivatele do datoveho souboru
-function save_to_database($email, $password) {
-    $database = load_database_file();
-    $user = [
-        'email' => $email,
-        'password' => $password,
-    ];
-
-    if (empty($database)) {
-        $database = [];
+    if (!isset($db)) {
+        $config = include('./config.php');
+        $db = new mysqli($config['host'], $config['user'], $config['password'], $config['database']);
     }
 
-    array_push($database, $user);
-    $path = get_database_file_path();
+    if ($db->connect_error) {
+        echo $db->connect_error;
+    }
 
-    return file_put_contents($path, json_encode($database));
+    return $db;
+}
+
+// Ulozi uzivatele do databaze
+function save_to_database($email, $password) {
+    $db = db_connect();
+    $query = "INSERT INTO users (email, password) VALUES ('$email', '$password')";
+
+    return $db->query($query);
 }
 
 // Vrati uzivatele z datoveho souboru
 function get_user_from_database($email) {
-    $database = load_database_file();
-    $user = array_filter($database, function ($user) use ($email) {
-        return $user['email'] === $email;
-    });
-    $user = array_values($user);
+    $db = db_connect();
+    $query = "SELECT * FROM users WHERE email = '$email'";
 
-    return empty($user) ? false : $user[0];
+    $result = $db->query($query);
+
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    } else {
+        return false;
+    }
 }
 
 // Zkontroluje, jestli existuje uzivatel s danym emailem
 function check_if_user_exists($email) {
-    $database = load_database_file();
-    $users = array_filter($database, function ($user) use ($email) {
-        return $user['email'] === $email;
-    });
+    return get_user_from_database($email) !== false;
+}
 
-    return count($users) > 0;
+// Najde uzivatele v databazi a ulozi k nemu hash cookieId retezce
+function save_user_cookie_id($email, $cookieId) {
+    $db = db_connect();
+    $query = "UPDATE users SET cookie_id = '$cookieId' WHERE email = '$email'";
+
+    return $db->query($query);
 }
